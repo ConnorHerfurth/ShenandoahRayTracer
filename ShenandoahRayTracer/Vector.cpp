@@ -24,6 +24,19 @@ Vector3::Vector3(float* vector_location)
 	z = vector_location[2];
 }
 
+// Creates a deep copy so that scope can be maintained.
+Vector3 Vector3::Copy()
+{
+	return Vector3(x, y, z);
+}
+
+void Vector3::Copy(float* output_location)
+{
+	output_location[0] = x;
+	output_location[1] = y;
+	output_location[2] = z;
+}
+
 bool Vector3::Equals(Vector3 vec)
 {
 	return x == vec.x && y == vec.y && z == vec.z;

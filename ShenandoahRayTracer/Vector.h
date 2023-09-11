@@ -22,6 +22,8 @@ public:
 	Vector3(float* vector_location);
 
 	// Non-Static Methods
+	Vector3 Copy();
+	void Copy(float* output_location);
 	bool Equals(Vector3 vec);
 	float GetMagnitude();
 	std::string ToString();
