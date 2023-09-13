@@ -1,7 +1,10 @@
 #pragma once
 
+#define _USE_MATH_DEFINES
+
 #include <string>
 #include <stdexcept>
+#include <math.h>
 
 // A matrix class that can be used for CPU operations, such as object
 // transformation and CPU device rendering.  Cannot be used on GPU, except for
@@ -25,6 +28,11 @@ public:
 	float GetValue(int row, int column);
 	std::string ToString();
 
+	// Static Methods
+	static Matrix GetTranslationMatrix(float x, float y, float z);
+	static Matrix GetRotationMatrix(float x, float y, float z);
+	static Matrix GetScaleMatrix(float x, float y, float z);
+
 	// Operators
 	Matrix& operator=(const Matrix& mat);
 	Matrix operator+(Matrix mat);
@@ -47,5 +55,6 @@ protected:
 	int rows, columns;
 
 private:
+	static void FillZeroArray(float* array, int rows, int columns);
 	void InitializeArray(float* _values = nullptr);
 };
