@@ -203,6 +203,15 @@ Matrix Matrix::GetScaleMatrix(Vector3 vec)
 	return Matrix::GetScaleMatrix(vec.x, vec.y, vec.z);
 }
 
+// Returns a row matrix based off of the given vector, with 1 row and 4 columns.
+// The reason we don't have this as a constructor is a user could theoretically
+// want a 4x1, 3x1, or 1x3 matrix, so this leads to better definition.
+Matrix Matrix::GetVectorRowMatrix(Vector3 vec)
+{
+	float vector[4] = { vec.x, vec.y, vec.z, 1 };
+	return Matrix(&vector[0], 1, 4);
+}
+
 
 // Used for rule of three.  If it weren't for the fact that I'm designing this
 // to be compatible with Cuda (which requires standard arrays for memcpy) I

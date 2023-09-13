@@ -36,6 +36,7 @@ public:
 	static Matrix GetRotationMatrix(Vector3 vec);
 	static Matrix GetScaleMatrix(float x, float y, float z);
 	static Matrix GetScaleMatrix(Vector3 vec);
+	static Matrix GetVectorRowMatrix(Vector3 vec);
 
 	// Operators
 	Matrix& operator=(const Matrix& mat);
