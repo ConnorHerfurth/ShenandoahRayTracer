@@ -36,6 +36,9 @@
     <ClCompile Include="Matrix.cpp">
       <Filter>Math</Filter>
     </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vector.h">
@@ -48,6 +51,9 @@
       <Filter>Handlers</Filter>
     </ClInclude>
     <ClInclude Include="Matrix.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
       <Filter>Math</Filter>
     </ClInclude>
   </ItemGroup>
