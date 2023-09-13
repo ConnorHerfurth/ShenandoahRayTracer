@@ -114,6 +114,11 @@ Matrix Matrix::GetTranslationMatrix(float x, float y, float z)
 	return Matrix(temp_values, 4, 4);
 }
 
+Matrix Matrix::GetTranslationMatrix(Vector3 vec)
+{
+	return Matrix::GetTranslationMatrix(vec.x, vec.y, vec.z);
+}
+
 // Produces a row-major form rotation matrix using euler angles.
 // These angles can cause gimbal lock, but for the purpose of expediting the
 // process we use these.  TODO: Implement Quaternions to avoid this.
@@ -172,6 +177,11 @@ Matrix Matrix::GetRotationMatrix(float x, float y, float z)
 	return Matrix(&x_rotation[0], 4, 4);
 }
 
+Matrix Matrix::GetRotationMatrix(Vector3 vec)
+{
+	return Matrix::GetRotationMatrix(vec.x, vec.y, vec.z);
+}
+
 // Gets row-major scale matrix.  Similar to the identity matrix but has values
 // along the diagonal instead of ones.
 Matrix Matrix::GetScaleMatrix(float x, float y, float z)
@@ -186,6 +196,11 @@ Matrix Matrix::GetScaleMatrix(float x, float y, float z)
 	output[15] = 1;
 
 	return Matrix(output, 4, 4);
+}
+
+Matrix Matrix::GetScaleMatrix(Vector3 vec)
+{
+	return Matrix::GetScaleMatrix(vec.x, vec.y, vec.z);
 }
 
 

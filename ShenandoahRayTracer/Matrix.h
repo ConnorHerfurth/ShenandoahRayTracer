@@ -5,6 +5,7 @@
 #include <string>
 #include <stdexcept>
 #include <math.h>
+#include "Vector.h"
 
 // A matrix class that can be used for CPU operations, such as object
 // transformation and CPU device rendering.  Cannot be used on GPU, except for
@@ -30,8 +31,11 @@ public:
 
 	// Static Methods
 	static Matrix GetTranslationMatrix(float x, float y, float z);
+	static Matrix GetTranslationMatrix(Vector3 vec);
 	static Matrix GetRotationMatrix(float x, float y, float z);
+	static Matrix GetRotationMatrix(Vector3 vec);
 	static Matrix GetScaleMatrix(float x, float y, float z);
+	static Matrix GetScaleMatrix(Vector3 vec);
 
 	// Operators
 	Matrix& operator=(const Matrix& mat);
