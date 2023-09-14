@@ -116,7 +116,7 @@ float Vector3::Dot(Vector3 vec1, Vector3 vec2)
 
 float Vector3::Dot(float* vec1, float* vec2)
 {
-	return vec1[0] * vec2[0] + vec1[1] * vec2[1] + vec1[0] * vec2[0];
+	return vec1[0] * vec2[0] + vec1[1] * vec2[1] + vec1[2] * vec2[2];
 }
 
 float Vector3::GetMagnitude(float* vec)
