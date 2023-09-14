@@ -15,9 +15,18 @@ Transform::Transform()
 
 Transform::Transform(Vector3 _origin, Vector3 _angles, Vector3 _scale)
 {
-	SetOrigin(_origin);
-	SetAngles(_angles);
-	SetScale(_scale);
+	// We can't call the set methods here because they create a composite, which
+	// requries all of the matrices to already be set otherwise it throws an
+	// exception for invalid matrix multiplication arguments.
+	origin = _origin.Copy();
+	angles = _angles.Copy();
+	scale = _scale.Copy();
+
+	translate_matrix = Matrix::GetTranslationMatrix(origin);
+	rotate_matrix = Matrix::GetRotationMatrix(angles);
+	scale_matrix = Matrix::GetScaleMatrix(scale);
+
+	CreateComposite();
 }
 
 

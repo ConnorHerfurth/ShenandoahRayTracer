@@ -223,9 +223,7 @@ Matrix& Matrix::operator=(const Matrix& mat)
 	rows = mat.rows;
 	columns = mat.columns;
 
-	values = new float[rows * columns];
-
-	memcpy(values, mat.values, sizeof(float) * rows * columns);
+	InitializeArray(mat.values);
 
 	return *this;
 }
