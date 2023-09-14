@@ -23,6 +23,9 @@ public:
 
 	// Not called Copy because once its copied it has a different name.
 	ObjectHandler Duplicate();
+
+	int GetNumVertices();
+	int GetNumTriangles();
 	
 	// Can either copy the raw, relative vertices or the vertices after being
 	// adjusted by the transform.

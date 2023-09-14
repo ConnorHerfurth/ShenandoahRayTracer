@@ -58,6 +58,16 @@ ObjectHandler ObjectHandler::Duplicate()
 						 transform, name + "_Copy");
 }
 
+int ObjectHandler::GetNumVertices()
+{
+	return num_vertices;
+}
+
+int ObjectHandler::GetNumTriangles()
+{
+	return num_triangles;
+}
+
 void ObjectHandler::CopyRawVertices(float* output_location)
 {
 	// Since vertices in most common formats (obj, fbx, etc) put the vertices
