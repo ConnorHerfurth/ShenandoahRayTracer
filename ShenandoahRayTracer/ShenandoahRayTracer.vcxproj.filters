@@ -39,6 +39,9 @@
     <ClCompile Include="Transform.cpp">
       <Filter>Math</Filter>
     </ClCompile>
+    <ClCompile Include="Device.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vector.h">
@@ -55,6 +58,9 @@
     </ClInclude>
     <ClInclude Include="Transform.h">
       <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Device.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
