@@ -171,8 +171,6 @@ Vector3 Camera::GetPixelRayDirection(int i, int j)
 	float v = bottom_distance + (top_distance - bottom_distance) *
 								(j + 0.5) / resolution_y;
 
-	std::cout << "Width: " << width << "," << height << std::endl;
-
 	return (forward * focal_length) + (right * u) + (up * v);
 }
 
@@ -192,6 +190,7 @@ void Camera::GetPixelRayDirection(int i, int j, float* output_location)
 	Vector3::Add(output_location, &temp_vectors[0], output_location);
 	Vector3::MultiplyF(up_address, v, &temp_vectors[0]);
 	Vector3::Add(output_location, &temp_vectors[0], output_location);
+	Vector3::Normalize(output_location);
 }
 
 
