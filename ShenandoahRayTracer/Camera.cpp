@@ -168,8 +168,8 @@ Vector3 Camera::GetPixelRayDirection(int i, int j)
 {
 	float u = left_distance + (right_distance - left_distance) *
 		                      (i + 0.5) / resolution_x;
-	float v = bottom_distance + (top_distance - bottom_distance) *
-								(j + 0.5) / resolution_y;
+	float v = -(bottom_distance + (top_distance - bottom_distance) *
+								(j + 0.5) / resolution_y);
 
 	return (forward * focal_length) + (right * u) + (up * v);
 }
@@ -177,10 +177,10 @@ Vector3 Camera::GetPixelRayDirection(int i, int j)
 // Same as previous method, but in-place.
 void Camera::GetPixelRayDirection(int i, int j, float* output_location)
 {
-	float u = left_distance + (right_distance - left_distance) *
-		(i + 0.5) / resolution_x;
-	float v = bottom_distance + (top_distance - bottom_distance) *
-		(j + 0.5) / resolution_y;
+	float u = -(left_distance + (right_distance - left_distance) *
+		(i + 0.5) / resolution_x);
+	float v = -(bottom_distance + (top_distance - bottom_distance) *
+		(j + 0.5) / resolution_y);
 	
 	// In this situation we multiply the vectors that are in the array by their
 	// respective values.  This saves allocation time, since we only have to
