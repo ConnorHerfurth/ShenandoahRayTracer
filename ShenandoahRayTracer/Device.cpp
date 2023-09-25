@@ -7,6 +7,11 @@ void PrintVector(float* vector)
 	std::cout << "(" << vector[0] << "," << vector[1] << "," << vector[2] << ")" << std::endl;
 }
 
+void PrintVector(int* vector)
+{
+	std::cout << "(" << vector[0] << "," << vector[1] << "," << vector[2] << ")" << std::endl;
+}
+
 int PointToArray(int x, int y, int width)
 {
 	return (y * (width-1) + x) * 3;
@@ -64,6 +69,8 @@ void CPUDevice::RenderFrame(Camera c, int max_threads, int* output_location)
 	RenderSection(&camera_origin_array[0], &camera_points_array[current_thread_position], 
 		          c.GetResolutionX() * c.GetResolutionY(),
 		          &output_location[current_thread_position]);
+
+	delete[] camera_points_array;
 }
 
 void CPUDevice::RenderSection(float* origin, float* positions, int num_positions, 
@@ -99,12 +106,21 @@ void CPUDevice::RenderSection(float* origin, float* positions, int num_positions
 					best_object = current_object;
 				}
 			}
+			
+			delete[] triangles;
+			delete[] vertices;
 		}
 
 		if (best_t < DBL_MAX)
 		{
+			output_location[i] = best_u * 255;
+			output_location[i + 1] = best_v * 255;
+			output_location[i + 2] = 0;
+		}
+		else
+		{
 			output_location[i] = 0;
-			output_location[i + 1] = 255;
+			output_location[i + 1] = 0;
 			output_location[i + 2] = 0;
 		}
 	}
@@ -114,7 +130,7 @@ void CPUDevice::RenderSection(float* origin, float* positions, int num_positions
 bool CPUDevice::GetRayHit(float* origin, float* direction, float* vertices,
 						  int* triangle, float* t, float* u, float* v)
 {
-	//PrintVector(direction);
+	//PrintVector(triangle);
 	float edge1[3], edge2[3], tvec[3], pvec[3], qvec[3];
 	float det, inv_det;
 
@@ -140,6 +156,7 @@ bool CPUDevice::GetRayHit(float* origin, float* direction, float* vertices,
 		return false;
 
 	//std::cout << "U good" << std::endl;
+	PrintVector(direction);
 
 	Vector3::Cross(tvec, edge1, qvec);
 

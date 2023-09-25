@@ -42,6 +42,9 @@ ObjectHandler::~ObjectHandler()
 
 ObjectHandler& ObjectHandler::operator=(const ObjectHandler& obj)
 {
+	delete[] vertices;
+	delete[] triangles;
+
 	num_vertices = obj.num_vertices;
 	num_triangles = obj.num_triangles;
 
