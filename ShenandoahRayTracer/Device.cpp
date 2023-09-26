@@ -2,21 +2,6 @@
 
 #define EPSILON 0.000001
 
-void PrintVector(float* vector)
-{
-	std::cout << "(" << vector[0] << "," << vector[1] << "," << vector[2] << ")" << std::endl;
-}
-
-void PrintVector(int* vector)
-{
-	std::cout << "(" << vector[0] << "," << vector[1] << "," << vector[2] << ")" << std::endl;
-}
-
-int PointToArray(int x, int y, int width)
-{
-	return (y * (width-1) + x) * 3;
-}
-
 CPUDevice::CPUDevice()
 {
 	
@@ -64,11 +49,27 @@ void CPUDevice::RenderFrame(Camera c, int max_threads, int* output_location)
 	}
 
 
-	// For testing purposes, we are ignoring threads until it is working.
+	
 	int current_thread_position = 0;
-	RenderSection(&camera_origin_array[0], &camera_points_array[current_thread_position], 
-		          c.GetResolutionX() * c.GetResolutionY(),
-		          &output_location[current_thread_position]);
+	int pixels_per_thread = c.GetResolutionX() * c.GetResolutionY() / max_threads;
+	std::vector<std::thread> threads;
+	for (current_thread_position = 0; current_thread_position < max_threads; current_thread_position++)
+	{
+		threads.emplace_back(std::thread(&CPUDevice::RenderSection, this,
+			camera_origin_array,
+			&camera_points_array[current_thread_position * pixels_per_thread*3],
+			pixels_per_thread,
+			&output_location[current_thread_position * pixels_per_thread * 3]));
+	}
+
+	for (int i = 0; i < threads.size(); i++)
+	{
+		threads.at(i).join();
+	}
+
+	//RenderSection(&camera_origin_array[0], &camera_points_array[current_thread_position], 
+	//	          c.GetResolutionX() * c.GetResolutionY(),
+	//	          &output_location[current_thread_position]);
 
 	delete[] camera_points_array;
 }
@@ -130,7 +131,6 @@ void CPUDevice::RenderSection(float* origin, float* positions, int num_positions
 bool CPUDevice::GetRayHit(float* origin, float* direction, float* vertices,
 						  int* triangle, float* t, float* u, float* v)
 {
-	//PrintVector(triangle);
 	float edge1[3], edge2[3], tvec[3], pvec[3], qvec[3];
 	float det, inv_det;
 
@@ -144,8 +144,6 @@ bool CPUDevice::GetRayHit(float* origin, float* direction, float* vertices,
 	if (det > -EPSILON && det < EPSILON)
 		return false;
 
-	//std::cout << "Det good" << std::endl;
-
 	inv_det = 1.0f / det;
 
 	Vector3::Subtract(origin, &vertices[triangle[0] * 4], tvec);
@@ -155,9 +153,6 @@ bool CPUDevice::GetRayHit(float* origin, float* direction, float* vertices,
 	if (*u < 0.0 || *u > 1.0)
 		return false;
 
-	//std::cout << "U good" << std::endl;
-	PrintVector(direction);
-
 	Vector3::Cross(tvec, edge1, qvec);
 
 	*v = Vector3::Dot(direction, qvec) * inv_det;
@@ -166,8 +161,6 @@ bool CPUDevice::GetRayHit(float* origin, float* direction, float* vertices,
 		return false;
 
 	*t = Vector3::Dot(edge2, qvec) * inv_det;
-
-	//std::cout << "True" << std::endl;
 	
 	return true;
 }
