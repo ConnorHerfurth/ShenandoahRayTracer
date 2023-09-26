@@ -67,10 +67,6 @@ void CPUDevice::RenderFrame(Camera c, int max_threads, int* output_location)
 		threads.at(i).join();
 	}
 
-	//RenderSection(&camera_origin_array[0], &camera_points_array[current_thread_position], 
-	//	          c.GetResolutionX() * c.GetResolutionY(),
-	//	          &output_location[current_thread_position]);
-
 	delete[] camera_points_array;
 }
 

@@ -42,6 +42,7 @@ ObjectHandler::~ObjectHandler()
 
 ObjectHandler& ObjectHandler::operator=(const ObjectHandler& obj)
 {
+	// Deleting old vertices to avoid memory leak.
 	delete[] vertices;
 	delete[] triangles;
 

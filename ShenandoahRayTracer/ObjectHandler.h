@@ -17,6 +17,7 @@ public:
 	ObjectHandler(float* _vertices, int _num_vertices, int* _triangles, 
 		          int _num_triangles, Transform t, std::string _name);
 	ObjectHandler(const ObjectHandler& obj);
+	//TODO: Create a constructor that takes an obj file or equivalent format.
 	~ObjectHandler();
 
 	ObjectHandler& operator=(const ObjectHandler& obj);
@@ -29,16 +30,12 @@ public:
 	
 	// Can either copy the raw, relative vertices or the vertices after being
 	// adjusted by the transform.
-	//
-	// If the object is exceedingly large or you're doing it on the GPU, a
-	// possible method for getting it to go faster is to 
 	void CopyRawVertices(float* output_location);
 	void CopyAdjustedVertices(float* output_location);
 	void CopyTriangles(int* output_location);
 
 	//TODO: Design a system for having textures and shaders within the object.
 
-	
 private:
 	float* vertices;
 	int num_vertices;
