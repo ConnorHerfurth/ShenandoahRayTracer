@@ -4,6 +4,55 @@
 #include <format>
 #include <math.h>
 
+/// <summary>
+/// 2D mathematical vector, mostly used for UV texture coordinates.
+/// </summary>
+class Vector2 {
+public:
+	float x, y;
+
+	Vector2();
+	Vector2(float _x, float _y);
+	Vector2(float* vector_location);
+
+	// Non-Static Methods
+	Vector2 Copy();
+	void Copy(float* output_location);
+	bool Equals(Vector2 vec);
+	float GetMagnitude();
+	std::string ToString();
+
+	// Operators
+	Vector2 operator+(Vector2 vec);
+	Vector2 operator+(float f);
+	Vector2 operator-(Vector2 vec);
+	Vector2 operator-(float f);
+	Vector2 operator*(float f);
+	Vector2 operator/(float f);
+
+	// Static Methods
+	static float GetAngle(Vector2 vec1, Vector2 vec2);
+	static float GetAngle(float* vec1, float* vec2);
+	static float GetDistance(Vector2 vecc1, Vector2 vec2);
+	static float GetDistance(float* vec1, float* vec2);
+	static float Dot(Vector2 vec1, Vector2 vec2);
+	static float Dot(float* vec1, float* vec2);
+	static float GetMagnitude(float* vec);
+
+	static Vector2 Normalize(Vector2 vec);
+	static void Normalize(float* vec, float* output_location);
+	static Vector2 Project(Vector2 vec1, Vector2 vec2);
+	static void Project(float* vec1, float* vec2, float* output_location);
+
+	// Static Operator Equivalents for use in Arrays
+	static void Add(float* vec1, float* vec2, float* output_location);
+	static void AddF(float* vec1, float f, float* output_location);
+	static void Subtract(float* vec1, float* vec2, float* output_location);
+	static void SubtractF(float* vec1, float f, float* output_location);
+	static void MultiplyF(float* vec1, float f, float* output_location);
+	static void DivideF(float* vec1, float f, float* output_location);
+};
+
 /** Implementation of a 3D Mathematical Vector
 
 The Vector3 class is used to both encapsulate 3D vector information and
