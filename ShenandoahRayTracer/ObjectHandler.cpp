@@ -116,16 +116,21 @@ void ObjectHandler::CopyAdjustedVertices(float* output_location)
 	}
 }
 
-void ObjectHandler::CopyUVs(float* output_location)
-{
-	memcpy(output_location, &uvs[0], sizeof(float) * num_vertices * 2);
-}
-
 void ObjectHandler::CopyTriangles(int* output_location)
 {
 	// Unlike the vertices, there is no adjusted triangles, since the points in
 	// the triangle represent indices within the vertice array.
 	memcpy(output_location, triangles, sizeof(int) * num_triangles * 3);
+}
+
+void ObjectHandler::CopyTriangleUVs(int* output_location)
+{
+	memcpy(output_location, &triangle_uvs[0], sizeof(int) * num_triangles * 3);
+}
+
+void ObjectHandler::CopyUVs(float* output_location)
+{
+	memcpy(output_location, &uvs[0], sizeof(float) * num_vertices * 2);
 }
 
 void ObjectHandler::InitializeArrays(float* _vertices, int* _triangles, 

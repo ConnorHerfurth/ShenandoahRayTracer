@@ -40,7 +40,7 @@
       <Filter>Math</Filter>
     </ClCompile>
     <ClCompile Include="Device.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
