@@ -130,7 +130,7 @@ void ObjectHandler::CopyTriangleUVs(int* output_location)
 
 void ObjectHandler::CopyUVs(float* output_location)
 {
-	memcpy(output_location, &uvs[0], sizeof(float) * num_vertices * 2);
+	memcpy(output_location, &uvs[0], sizeof(float) * num_uvs * 2);
 }
 
 void ObjectHandler::InitializeArrays(float* _vertices, int* _triangles, 
