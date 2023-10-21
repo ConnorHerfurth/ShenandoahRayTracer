@@ -73,6 +73,7 @@ void CPUDevice::RenderFrame(Camera c, int max_threads, int* output_location)
 void CPUDevice::RenderSection(float* origin, float* positions, int num_positions, 
 	                          int* output_location)
 {
+	int best_triangle_index;
 	float t, u, v;
 	float best_t, best_u, best_v;
 	ObjectHandler best_object;
@@ -97,6 +98,7 @@ void CPUDevice::RenderSection(float* origin, float* positions, int num_positions
 				
 				if (t < best_t && hit)
 				{
+					best_triangle_index = f;
 					best_t = t;
 					best_u = u;
 					best_v = v;
@@ -110,9 +112,46 @@ void CPUDevice::RenderSection(float* origin, float* positions, int num_positions
 
 		if (best_t < DBL_MAX)
 		{
-			output_location[i] = best_u * 255;
-			output_location[i + 1] = best_v * 255;
+			// Loading UVs and Triangle UVs
+			int* triangle_uvs = new int[best_object.GetNumTriangles() * 3];
+			float* uvs = new float[best_object.GetNumUVs() * 2];
+
+			best_object.CopyTriangles(triangle_uvs);
+			best_object.CopyUVs(uvs);
+
+			// We find the best triangle by taking the index of the best triangle,
+			// and copying the triangle UVs into here.
+			int best_triangle_uvs[3];
+			memcpy(best_triangle_uvs, &triangle_uvs[best_triangle_index],
+				   sizeof(int) * 3);
+
+			float a_uvs[2], b_uvs[2], c_uvs[2];
+			memcpy(a_uvs, &uvs[best_triangle_uvs[0] * 2], sizeof(float) * 2);
+			memcpy(b_uvs, &uvs[best_triangle_uvs[1] * 2], sizeof(float) * 2);
+			memcpy(c_uvs, &uvs[best_triangle_uvs[2] * 2], sizeof(float) * 2);
+
+			// Now we create the u and v vectors within the texture plane, by
+			// subtracting the UV coordinates of A-B and A-C
+			float ab[2], ac[2];
+			Vector2::Subtract(b_uvs, a_uvs, ab);
+			Vector2::Subtract(c_uvs, a_uvs, ac);
+
+			// Now that we have these vectors, we can compute the final vector
+			// for the texture coordinate
+			Vector2::MultiplyF(ab, best_u, ab);
+			Vector2::MultiplyF(ac, best_v, ac);
+
+			// Same as writing A + ab(u) + ac(v)
+			
+			Vector2::Add(&uvs[best_triangle_uvs[0]], ab, ab);
+			Vector2::Add(ab, ac, ab);
+
+			output_location[i] = ab[0];
+			output_location[i + 1] = ab[1];
 			output_location[i + 2] = 0;
+
+			delete[] triangle_uvs;
+			delete[] uvs;
 		}
 		else
 		{

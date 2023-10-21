@@ -140,42 +140,39 @@ void Vector2::Add(float* vec1, float* vec2, float* output_location)
 {
 	output_location[0] = vec1[0] + vec2[0];
 	output_location[1] = vec1[1] + vec2[1];
-	output_location[2] = vec1[2] + vec2[2];
 }
 
 void Vector2::AddF(float* vec1, float f, float* output_location)
 {
 	output_location[0] = vec1[0] + f;
 	output_location[1] = vec1[1] + f;
-	output_location[2] = vec1[2] + f;
 }
 
 void Vector2::Subtract(float* vec1, float* vec2, float* output_location)
 {
+	float b = output_location[0];
+	b = vec1[0];
+	b = vec2[0];
 	output_location[0] = vec1[0] - vec2[0];
 	output_location[1] = vec1[1] - vec2[1];
-	output_location[2] = vec1[2] - vec2[2];
 }
 
 void Vector2::SubtractF(float* vec1, float f, float* output_location)
 {
 	output_location[0] = vec1[0] - f;
 	output_location[1] = vec1[1] - f;
-	output_location[2] = vec1[2] - f;
 }
 
 void Vector2::MultiplyF(float* vec1, float f, float* output_location)
 {
 	output_location[0] = vec1[0] * f;
 	output_location[1] = vec1[1] * f;
-	output_location[2] = vec1[2] * f;
 }
 
 void Vector2::DivideF(float* vec1, float f, float* output_location)
 {
 	output_location[0] = vec1[0] / f;
 	output_location[1] = vec1[1] / f;
-	output_location[2] = vec1[2] / f;
 }
 
 // Vector3 Impelementation

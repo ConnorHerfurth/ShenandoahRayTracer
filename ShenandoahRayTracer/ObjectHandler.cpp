@@ -32,6 +32,7 @@ ObjectHandler::ObjectHandler(float* _vertices, int _num_vertices, float* _uvs,
 
 ObjectHandler::ObjectHandler(const ObjectHandler& obj)
 {
+	transform = obj.transform;
 	num_vertices = obj.num_vertices;
 	num_uvs = obj.num_uvs;
 	num_triangles = obj.num_triangles;
@@ -60,6 +61,7 @@ ObjectHandler& ObjectHandler::operator=(const ObjectHandler& obj)
 
 	num_vertices = obj.num_vertices;
 	num_triangles = obj.num_triangles;
+	num_uvs = obj.num_uvs;
 
 	InitializeArrays(obj.vertices, obj.triangles, obj.triangle_uvs, obj.uvs);
 
