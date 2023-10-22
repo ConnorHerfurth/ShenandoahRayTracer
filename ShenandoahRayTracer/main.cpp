@@ -37,7 +37,6 @@ int main()
 	auto stop = std::chrono::high_resolution_clock::now();
 
 	std::cout << std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count() << std::endl;
-	std::cout << oh.copy_calls << std::endl;
 
 	std::ofstream file;
 	file.open("test.txt", std::ofstream::trunc);
