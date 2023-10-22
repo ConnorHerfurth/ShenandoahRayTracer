@@ -8,6 +8,8 @@
 class Device;
 class CPUDevice;
 
+struct Hit;
+
 // A class that encapsulates a specific implementation of the ray tracing
 // algorithm, either for different devices (CPU, GPU, Optix) or for specific
 // algorithms.
@@ -72,4 +74,14 @@ private:
 	// detecting the nearest hit.
 	bool GetRayHit(float* origin, float* direction, float* vertices,
 					int* triangle, float* t, float* u, float* v);
+};
+
+struct Hit
+{
+	bool hit;
+	float t, u, v;
+	int triangle_index; // The index of the triangle that was hit.
+	ObjectHandler* object; // The object that was hit.
+
+	bool IsGreater(Hit h);
 };

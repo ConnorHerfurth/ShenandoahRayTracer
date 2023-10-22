@@ -204,3 +204,13 @@ void CPUDevice::UploadData(std::vector<ObjectHandler>* _objects)
 {
 	objects = _objects;
 }
+
+
+bool Hit::IsGreater(Hit h)
+{
+	if (hit && !h.hit)
+		return true;
+	if (t < h.t)
+		return true;
+	return false;
+}

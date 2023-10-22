@@ -37,6 +37,7 @@ ObjectHandler::ObjectHandler(const ObjectHandler& obj)
 	num_uvs = obj.num_uvs;
 	num_triangles = obj.num_triangles;
 
+
 	InitializeArrays(obj.vertices, obj.triangles, obj.triangle_uvs, obj.uvs);
 
 	name = obj.name;
