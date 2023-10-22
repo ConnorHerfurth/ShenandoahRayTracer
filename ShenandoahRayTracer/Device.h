@@ -33,7 +33,7 @@ public:
 	// Handles the data depending on the device in question.  For CPUs, there
 	// might be no need; for GPUs it will have to be uplaoded.  Entirely depends
 	// on specific implementation.
-	virtual void UploadData(std::vector<ObjectHandler>* objects) = 0;
+	virtual void UploadData(std::vector<ObjectHandler*>* objects) = 0;
 
 protected:
 	bool is_ready = false;
@@ -51,14 +51,14 @@ public:
 
 	void RenderFrame(Camera c, int max_threads, int* output_location);
 
-	void UploadData(std::vector<ObjectHandler>* _objects);
+	void UploadData(std::vector<ObjectHandler*>* _objects);
 
 private:
 	// This CPU Device doesn't copy the data since there's no advantage to it.
 	// Instead, we just hold the vector of objects so that we don't duplicate
 	// memory.  This is one of the reasons that render handlers are not allowed
 	// to update objects until the frame has finished rendering.
-	std::vector<ObjectHandler>* objects;
+	std::vector<ObjectHandler*>* objects;
 
 	// This renders a horizontal section.  It could technically be squares like
 	// many engines, but as far as I can tell this offers no benefit other than

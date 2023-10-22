@@ -13,7 +13,7 @@ int main()
 
 	Camera c = Camera(Vector3(0, 0, 0), Vector3(0, 0, 1), Vector3(1, 0, 0), width, height, 90, 1);
 
-	float vertices[16] = { 1,2,-1,1,
+	float vertices[16] = { 1,10,-1,1,
 						  -1,2,-1,1,
 						  -1,2,1,1,
 	                       1,2,1,1};
@@ -25,8 +25,8 @@ int main()
 
 	CPUDevice device = CPUDevice();
 
-	std::vector<ObjectHandler> objects;
-	objects.emplace_back(oh);
+	std::vector<ObjectHandler*> objects;
+	objects.emplace_back(&oh);
 
 	device.UploadData(&objects);
 
@@ -37,6 +37,7 @@ int main()
 	auto stop = std::chrono::high_resolution_clock::now();
 
 	std::cout << std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count() << std::endl;
+	std::cout << oh.copy_calls << std::endl;
 
 	std::ofstream file;
 	file.open("test.txt", std::ofstream::trunc);

@@ -73,11 +73,12 @@ void CPUDevice::RenderFrame(Camera c, int max_threads, int* output_location)
 void CPUDevice::RenderSection(float* origin, float* positions, int num_positions, 
 	                          int* output_location)
 {
+	std::cout << "Rendering Now..." << std::endl;
 	int best_triangle_index;
 	float t, u, v;
 	float best_t, best_u, best_v;
-	ObjectHandler best_object;
-	ObjectHandler current_object;
+	ObjectHandler* best_object = NULL;
+	ObjectHandler* current_object;
 	for (int i = 0; i < num_positions * 3; i+=3)
 	{
 		t = DBL_MAX;
@@ -85,13 +86,13 @@ void CPUDevice::RenderSection(float* origin, float* positions, int num_positions
 		for (int o = 0; o < objects->size(); o++)
 		{
 			current_object = objects->at(o);
-			int* triangles = new int[current_object.GetNumTriangles() * 3];
-			float* vertices = new float[current_object.GetNumVertices() * 4];
+			int* triangles = new int[current_object->GetNumTriangles() * 3];
+			float* vertices = new float[current_object->GetNumVertices() * 4];
 
-			current_object.CopyTriangles(&triangles[0]);
-			current_object.CopyAdjustedVertices(&vertices[0]);
+			current_object->CopyTriangles(&triangles[0]);
+			current_object->CopyAdjustedVertices(&vertices[0]);
 
-			for (int f = 0; f < current_object.GetNumTriangles() * 3; f += 3)
+			for (int f = 0; f < current_object->GetNumTriangles() * 3; f += 3)
 			{
 				bool hit = GetRayHit(origin, &positions[i], &vertices[0],
 					                 &triangles[f], &t, &u, &v);
@@ -113,11 +114,11 @@ void CPUDevice::RenderSection(float* origin, float* positions, int num_positions
 		if (best_t < DBL_MAX)
 		{
 			// Loading UVs and Triangle UVs
-			int* triangle_uvs = new int[best_object.GetNumTriangles() * 3];
-			float* uvs = new float[best_object.GetNumUVs() * 2];
+			int* triangle_uvs = new int[best_object->GetNumTriangles() * 3];
+			float* uvs = new float[best_object->GetNumUVs() * 2];
 
-			best_object.CopyTriangles(triangle_uvs);
-			best_object.CopyUVs(uvs);
+			best_object->CopyTriangles(triangle_uvs);
+			best_object->CopyUVs(uvs);
 
 			// We find the best triangle by taking the index of the best triangle,
 			// and copying the triangle UVs into here.
@@ -200,7 +201,7 @@ bool CPUDevice::GetRayHit(float* origin, float* direction, float* vertices,
 	return true;
 }
 
-void CPUDevice::UploadData(std::vector<ObjectHandler>* _objects)
+void CPUDevice::UploadData(std::vector<ObjectHandler*>* _objects)
 {
 	objects = _objects;
 }
