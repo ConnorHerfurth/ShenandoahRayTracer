@@ -210,6 +210,8 @@ bool Hit::IsGreater(Hit h)
 {
 	if (hit && !h.hit)
 		return true;
+	else if (!hit && h.hit)
+		return false;
 	if (t < h.t)
 		return true;
 	return false;
