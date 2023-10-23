@@ -7,12 +7,12 @@ The Hit class is mostly used to encapsulate the information of the rays traced d
 can also be used for casting against objects in simulations.
 
 ## Public Variables
-- bool hit : Whether or not the Hit actually hit anything.  If false, the rest of the data can be considered garbage.
+- bool hit (Default: false) : Whether or not the Hit actually hit anything.  If false, the rest of the data can be considered garbage.
 - float t : The distance along the ray that the hit occurred.
 - float u : The distance along the U vector for the hit.
 - float v : The distance along the V vector for the hit.
 - int triangle_index : The index of the triangle that was hit within the ObjectHandler.  Used for calculating color within Materials.
-- ObjectHandler* object : The pointer to the object that was hit.
+- ObjectHandler* object (Default: nullptr) : The pointer to the object that was hit.
 
 ## Methods
 - bool IsGreater(Hit h)
