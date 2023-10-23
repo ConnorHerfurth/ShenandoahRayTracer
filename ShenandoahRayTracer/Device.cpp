@@ -74,15 +74,11 @@ void CPUDevice::RenderSection(float* origin, float* positions, int num_positions
 	                          int* output_location)
 {
 	std::cout << "Rendering Now..." << std::endl;
-	int best_triangle_index;
-	float t, u, v;
-	float best_t, best_u, best_v;
-	ObjectHandler* best_object = NULL;
+	Hit best_hit;
+	Hit current_hit;
 	ObjectHandler* current_object;
 	for (int i = 0; i < num_positions * 3; i+=3)
 	{
-		t = DBL_MAX;
-		best_t = DBL_MAX;
 		for (int o = 0; o < objects->size(); o++)
 		{
 			current_object = objects->at(o);
@@ -94,16 +90,14 @@ void CPUDevice::RenderSection(float* origin, float* positions, int num_positions
 
 			for (int f = 0; f < current_object->GetNumTriangles() * 3; f += 3)
 			{
-				bool hit = GetRayHit(origin, &positions[i], &vertices[0],
-					                 &triangles[f], &t, &u, &v);
+				GetRayHit(origin, &positions[i], &vertices[0],
+					      &triangles[f], &current_hit);
 				
-				if (t < best_t && hit)
+				if (current_hit.IsGreater(best_hit))
 				{
-					best_triangle_index = f;
-					best_t = t;
-					best_u = u;
-					best_v = v;
-					best_object = current_object;
+					best_hit = current_hit;
+					best_hit.object = current_object;
+					best_hit.triangle_index = f;
 				}
 			}
 			
@@ -111,19 +105,19 @@ void CPUDevice::RenderSection(float* origin, float* positions, int num_positions
 			delete[] vertices;
 		}
 
-		if (best_t < DBL_MAX)
+		if (best_hit.hit)
 		{
 			// Loading UVs and Triangle UVs
-			int* triangle_uvs = new int[best_object->GetNumTriangles() * 3];
-			float* uvs = new float[best_object->GetNumUVs() * 2];
+			int* triangle_uvs = new int[best_hit.object->GetNumTriangles() * 3];
+			float* uvs = new float[best_hit.object->GetNumUVs() * 2];
 
-			best_object->CopyTriangles(triangle_uvs);
-			best_object->CopyUVs(uvs);
+			best_hit.object->CopyTriangles(triangle_uvs);
+			best_hit.object->CopyUVs(uvs);
 
 			// We find the best triangle by taking the index of the best triangle,
 			// and copying the triangle UVs into here.
 			int best_triangle_uvs[3];
-			memcpy(best_triangle_uvs, &triangle_uvs[best_triangle_index],
+			memcpy(best_triangle_uvs, &triangle_uvs[best_hit.triangle_index],
 				   sizeof(int) * 3);
 
 			float a_uvs[2], b_uvs[2], c_uvs[2];
@@ -139,8 +133,8 @@ void CPUDevice::RenderSection(float* origin, float* positions, int num_positions
 
 			// Now that we have these vectors, we can compute the final vector
 			// for the texture coordinate
-			Vector2::MultiplyF(ab, best_u, ab);
-			Vector2::MultiplyF(ac, best_v, ac);
+			Vector2::MultiplyF(ab, best_hit.u, ab);
+			Vector2::MultiplyF(ac, best_hit.v, ac);
 
 			// Same as writing A + ab(u) + ac(v)
 			
@@ -160,13 +154,16 @@ void CPUDevice::RenderSection(float* origin, float* positions, int num_positions
 			output_location[i + 1] = 0;
 			output_location[i + 2] = 0;
 		}
+
+		best_hit.hit = false;
 	}
 
 }
 
-bool CPUDevice::GetRayHit(float* origin, float* direction, float* vertices,
-						  int* triangle, float* t, float* u, float* v)
+void CPUDevice::GetRayHit(float* origin, float* direction, float* vertices,
+						  int* triangle, Hit* output)
 {
+	output->hit = false;
 	float edge1[3], edge2[3], tvec[3], pvec[3], qvec[3];
 	float det, inv_det;
 
@@ -178,27 +175,26 @@ bool CPUDevice::GetRayHit(float* origin, float* direction, float* vertices,
 	det = Vector3::Dot(edge1, pvec);
 	
 	if (det > -EPSILON && det < EPSILON)
-		return false;
+		return;
 
 	inv_det = 1.0f / det;
 
 	Vector3::Subtract(origin, &vertices[triangle[0] * 4], tvec);
 
-	*u = Vector3::Dot(tvec, pvec) * inv_det;
+	output->u = Vector3::Dot(tvec, pvec) * inv_det;
 
-	if (*u < 0.0 || *u > 1.0)
-		return false;
+	if (output->u < 0.0 || output->u > 1.0)
+		return;
 
 	Vector3::Cross(tvec, edge1, qvec);
 
-	*v = Vector3::Dot(direction, qvec) * inv_det;
+	output->v = Vector3::Dot(direction, qvec) * inv_det;
 
-	if (*v < 0.0 || *u + *v > 1.0)
-		return false;
+	if (output->v < 0.0 || (double)output->u + (double)output->v > 1.0)
+		return;
 
-	*t = Vector3::Dot(edge2, qvec) * inv_det;
-	
-	return true;
+	output->t = Vector3::Dot(edge2, qvec) * inv_det;
+	output->hit = true;
 }
 
 void CPUDevice::UploadData(std::vector<ObjectHandler*>* _objects)

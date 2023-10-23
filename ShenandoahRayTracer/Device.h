@@ -72,16 +72,16 @@ private:
 	// against.  triangle is the location of the triangle (this function only
 	// tests one triangle).  t, u, and v are all output variables used for 
 	// detecting the nearest hit.
-	bool GetRayHit(float* origin, float* direction, float* vertices,
-					int* triangle, float* t, float* u, float* v);
+	void GetRayHit(float* origin, float* direction, float* vertices,
+					int* triangle, Hit* output);
 };
 
 struct Hit
 {
-	bool hit;
+	bool hit = false;
 	float t, u, v;
 	int triangle_index; // The index of the triangle that was hit.
-	ObjectHandler* object; // The object that was hit.
+	ObjectHandler* object = nullptr; // The object that was hit.
 
 	bool IsGreater(Hit h);
 };
