@@ -12,18 +12,19 @@ int main()
 	int height = 500;
 
 	Camera c = Camera(Vector3(0, 0, 0), Vector3(0, 0, 1), Vector3(1, 0, 0), width, height, 90, 1);
+	std::cout << c.GetForward().ToString() << std::endl;
 
-	float vertices[16] = { 1,10,-1,1,
-						  -1,2,-1,1,
-						  -1,2,1,1,
-	                       1,2,1,1};
-	int triangles[6] = { 0,1,2,0,3,2 };
-	float uvs[8] = { 0,0,0,63,63,63,63,0};
-	int triangle_uvs[6] = { 0,1,2,0,1,3 };
+	ObjectHandler oh = ObjectHandler("C:\\Users\\Connor Herfurth\\Documents\\MonkeyOnly.obj");
+	oh.transform.OffsetOrigin(Vector3(0, -5, 0));
 
-	ObjectHandler oh = ObjectHandler(vertices, 4, uvs, 4, triangles, 2, triangle_uvs, Transform(), "test");
+	float* vertices = new float[oh.GetNumVertices() * 4];
+	oh.CopyAdjustedVertices(vertices);
+
+	float* uvs = new float[oh.GetNumUVs() * 2];
+	oh.CopyUVs(uvs);
 
 	CPUDevice device = CPUDevice();
+
 
 	std::vector<ObjectHandler*> objects;
 	objects.emplace_back(&oh);
