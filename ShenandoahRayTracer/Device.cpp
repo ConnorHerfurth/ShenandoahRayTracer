@@ -140,9 +140,9 @@ void CPUDevice::RenderSection(float* origin, float* positions, int num_positions
 			
 			Vector2::Add(&uvs[best_triangle_uvs[0]], ab, ab);
 			Vector2::Add(ab, ac, ab);
-
-			output_location[i] = ab[0];
-			output_location[i + 1] = ab[1];
+			
+			output_location[i] = abs((int)(ab[0] * 63) % 63);
+			output_location[i + 1] = abs((int)(ab[1] * 63) % 63);
 			output_location[i + 2] = 0;
 
 			delete[] triangle_uvs;

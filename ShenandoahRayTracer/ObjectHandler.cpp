@@ -30,6 +30,32 @@ ObjectHandler::ObjectHandler(float* _vertices, int _num_vertices, float* _uvs,
 	name = _name;
 }
 
+ObjectHandler::ObjectHandler(std::string file_location)
+{
+	transform = Transform();
+	// Checking if we can load the file
+	std::ifstream file(file_location);
+
+	if (!file)
+		throw std::invalid_argument("File not found for .obj loading.");
+	
+	// Reading all the lines into a vector
+	std::vector<std::string> lines;
+	std::string line;
+	
+	while (std::getline(file, line))
+		lines.push_back(line);
+
+	// Now we use helper methods to individually find vertices, uvs, triangles,
+	// and triangle_uvs.
+
+	InitializeVertices(&lines);
+	InitializeTriangles(&lines);
+	InitializeUVs(&lines);
+
+	name = "Test";
+}
+
 ObjectHandler::ObjectHandler(const ObjectHandler& obj)
 {
 	transform = obj.transform;
@@ -148,4 +174,116 @@ void ObjectHandler::InitializeArrays(float* _vertices, int* _triangles,
 	memcpy(triangles, _triangles, sizeof(int) * num_triangles * 3);
 	memcpy(triangle_uvs, _triangle_uvs, sizeof(int) * num_triangles * 3);
 	memcpy(uvs, _uvs, sizeof(float) * num_uvs * 2);
+}
+
+void ObjectHandler::InitializeVertices(std::vector<std::string>* lines)
+{
+	// Unformatted regex:
+	// \s*v\s+(-?[0-9]+.[0-9]+)\s+(-?[0-9]+.[0-9]+)\s+(-?[0-9]+.[0-9]+)\s*(-?[0-9]+.[0-9]+)?\s*
+	std::regex pattern = std::regex("\\s*v\\s+(-?[0-9]+.[0-9]+)\\s+(-?[0-9]+.[0-9]+)\\s+(-?[0-9]+.[0-9]+)\\s*(-?[0-9]+.[0-9]+)?\\s*");
+	std::smatch matches;
+
+	std::vector<float> values; // Vector for loading the vertices
+
+	for (int i = 0; i < lines->size(); i++)
+	{
+		if (std::regex_match(lines->at(i), matches, pattern))
+		{
+			values.push_back(std::stof(matches[1]));
+			values.push_back(std::stof(matches[2]));
+			values.push_back(std::stof(matches[3]));
+
+			if (matches[4] == "")
+				values.push_back(1);
+			else
+				values.push_back(std::stof(matches[4]));
+		}
+	}
+
+	// Initializing array and copying data.
+	num_vertices = values.size() / 4;
+	vertices = new float[num_vertices * 4];
+
+	std::copy(values.begin(), values.end(), vertices);
+}
+
+void ObjectHandler::InitializeTriangles(std::vector<std::string>* lines)
+{
+	// This will also match and load quads, but converts them to triangles so
+	// it fits in the pipeline.  Face normals will be ignored, as the code
+	// doesn't deal with normals.
+	
+	// Unformatted regex:
+	// \s*f\s+([0-9]+)\/?\/?([0-9]+)?\/?([0-9]+)?\s+([0-9]+)\/?\/?([0-9]+)?\/?([0-9]+)?\s+([0-9]+)\/?\/?([0-9]+)?\/?([0-9]+)?
+	std::regex pattern = std::regex("\\s*f\\s+([0-9]+)\\/?\\/?([0-9]+)?\\/?([0-9]+)?\\s+([0-9]+)\\/?\\/?([0-9]+)?\\/?([0-9]+)?\\s+([0-9]+)\\/?\\/?([0-9]+)?\\/?([0-9]+)?");
+	std::smatch matches;
+
+	std::vector<int> triangle_values;
+	std::vector<int> uv_values;
+
+	bool using_uvs = true;
+
+	for (int i = 0; i < lines->size(); i++)
+	{
+		if (std::regex_match(lines->at(i), matches, pattern))
+		{
+			// Adding triangle numbers
+			triangle_values.push_back(std::stoi(matches[1]) - 1);
+			triangle_values.push_back(std::stoi(matches[4]) - 1);
+			triangle_values.push_back(std::stoi(matches[7]) - 1);
+
+			// Adding triangle UVs, if they exist.  If they don't, we just
+			// assume that they all use the zero uv.
+			if (matches[2] != "" && using_uvs)
+			{
+				uv_values.push_back(std::stoi(matches[2]) - 1);
+				uv_values.push_back(std::stoi(matches[5]) - 1);
+				uv_values.push_back(std::stoi(matches[8]) - 1);
+			}
+			else
+			{
+				using_uvs = false;
+			}
+		}
+	}
+
+	// Initializing arrays and copying values over
+	num_triangles = triangle_values.size() / 3;
+	triangles = new int[num_triangles * 3];
+	triangle_uvs = new int[num_triangles * 3];
+
+	std::copy(triangle_values.begin(), triangle_values.end(), triangles);
+
+	if (using_uvs)
+		std::copy(uv_values.begin(), uv_values.end(), triangle_uvs);
+	else
+	{
+		for (int i = 0; i < num_triangles; i++)
+			triangle_uvs[i] = 0;
+	}
+}
+
+void ObjectHandler::InitializeUVs(std::vector<std::string>* lines)
+{
+	// Unformatted regex:
+	// \\s*vt\\s+([0-9]+.[0-9]+)\\s+([0-9]+.[0-9]+)
+	std::regex pattern = std::regex("\\s*vt\\s+([0-9]+.[0-9]+)\\s+([0-9]+.[0-9]+)");
+	std::smatch matches;
+
+	std::vector<float> values;
+
+	for (int i = 0; i < lines->size(); i++)
+	{
+		if (std::regex_match(lines->at(i), matches, pattern))
+		{
+			values.push_back(std::stof(matches[1]));
+			values.push_back(std::stof(matches[2]));
+		}
+	}
+
+	// Initializing array and copying data.
+	num_uvs = values.size() / 2;
+	uvs = new float[num_uvs * 2];
+
+	std::copy(values.begin(), values.end(), uvs);
 }

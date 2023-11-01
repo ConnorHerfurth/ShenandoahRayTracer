@@ -47,6 +47,13 @@ public:
 		          int* _triangles, int _num_triangles, int* _triangle_uvs,
 		          Transform t, std::string _name);
 
+	/**
+	* @brief Creates an ObjectHandler from a .obj file.
+	* 
+	* @param file_location The directory of the .obj file
+	*/
+	ObjectHandler(std::string file_location);
+
 	// TODO: Create a constructor that can load from a .obj file.
 
 	/**
@@ -124,5 +131,27 @@ private:
 	*/
 	void InitializeArrays(float* _vertices, int* _triangles,
 		                  int* _triangle_uvs, float* _uvs);
+
+	/**
+	* @brief Initializes the vertices in .obj loading given a vector of lines.
+	* 
+	* @param lines The lines in the .obj file.
+	*/
+	void InitializeVertices(std::vector<std::string>* lines);
+
+	/**
+	* @brief Initializes the triangles and triangle UVs in a .obj file given
+	* a vector of lines.
+	* 
+	* @param lines The lines in the .obj file.
+	*/
+	void InitializeTriangles(std::vector<std::string>* lines);
+
+	/**
+	* @brief Initializes the UVs in .obj loading given a vector of lines.
+	* 
+	* @param lines The lines in the .obj file.
+	*/
+	void InitializeUVs(std::vector<std::string>* lines);
 };
 
