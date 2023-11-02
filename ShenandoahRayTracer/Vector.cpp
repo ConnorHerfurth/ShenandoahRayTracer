@@ -211,9 +211,11 @@ void Vector3::Copy(float* output_location)
 	output_location[2] = z;
 }
 
-bool Vector3::Equals(Vector3 vec)
+bool Vector3::Equals(Vector3 vec, float epsilon)
 {
-	return x == vec.x && y == vec.y && z == vec.z;
+	return abs(x - vec.x) <= epsilon &&
+		   abs(y - vec.y) <= epsilon && 
+		   abs(z - vec.z) <= epsilon;
 }
 
 float Vector3::GetMagnitude()
@@ -257,14 +259,21 @@ Vector3 Vector3::operator/(float f)
 	return Vector3(x / f, y / f, z / f);
 }
 
+bool Vector3::Equals(float* vec1, float* vec2, float epsilon)
+{
+	return  abs(vec1[0] - vec2[0]) <= epsilon &&
+			abs(vec1[1] - vec2[1]) <= epsilon &&
+			abs(vec1[2] - vec2[2]) <= epsilon;
+}
+
 float Vector3::GetAngle(Vector3 vec1, Vector3 vec2)
 {
-	return Dot(vec1, vec2) / (vec1.GetMagnitude() * vec2.GetMagnitude());
+	return acos(Dot(vec1, vec2) / (vec1.GetMagnitude() * vec2.GetMagnitude()));
 }
 
 float Vector3::GetAngle(float* vec1, float* vec2)
 {
-	return Dot(vec1, vec2) / (GetMagnitude(vec1) * GetMagnitude(vec2));
+	return acos(Dot(vec1, vec2) / (GetMagnitude(vec1) * GetMagnitude(vec2)));
 }
 
 float Vector3::GetDistance(Vector3 vec1, Vector3 vec2)
@@ -318,9 +327,9 @@ Vector3 Vector3::Normalize(Vector3 vec)
 void Vector3::Normalize(float* vec1, float* output_location)
 {
 	float m = GetMagnitude(vec1);
-	output_location[0] = output_location[0] / m;
-	output_location[1] = output_location[1] / m;
-	output_location[2] = output_location[2] / m;
+	output_location[0] = vec1[0] / m;
+	output_location[1] = vec1[1] / m;
+	output_location[2] = vec1[2] / m;
 }
 
 // Calculates and returns the projection vector, in the format

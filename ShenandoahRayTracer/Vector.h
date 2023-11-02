@@ -66,15 +66,57 @@ class Vector3 {
 public:
 	float x, y, z;
 
+	/**
+	* @brief Default constructor for Vector3
+	*/
 	Vector3();
+	/**
+	* @brief Vector3 constructor with specified values
+	* 
+	* @param _x: Vector x component
+	* @param _y: Vector y component
+	* @param _z: Vector z component
+	*/
 	Vector3(float _x, float _y, float _z);
+	/**
+	* @brief Vector3 constructor that loads from position in float array.
+	* 
+	* @param vector_location: Pointer to float array with minimum size 3.
+	*/
 	Vector3(float* vector_location);
 
 	// Non-Static Methods
+	/**
+	* @brief Copies the Vector3
+	*
+	* @return A copy of the Vector3
+	*/
 	Vector3 Copy();
+	/**
+	* @brief Copies the Vector3 to a float array.
+	* 
+	* @param output_location: Pointer to a float array with minimum size 3.
+	*/
 	void Copy(float* output_location);
-	bool Equals(Vector3 vec);
+	/**
+	* @brief Checks if two Vector3 have all equivalent components.
+	* 
+	* @param vec: A Vector3 to check equivalence.
+	* 
+	* @return Whether the two Vector3 are equivalent.
+	*/
+	bool Equals(Vector3 vec, float epsilon);
+	/**
+	* @brief Returns the magnitude of the Vector3
+	* 
+	* @return The magnitude of the vector.
+	*/
 	float GetMagnitude();
+	/**
+	* @brief Returns a string representation of the Vector3
+	* 
+	* @return A string representation of the Vector3
+	*/
 	std::string ToString();
 
 	// Operators
@@ -85,7 +127,17 @@ public:
 	Vector3 operator*(float f);
 	Vector3 operator/(float f);
 
+	static bool Equals(float* vec1, float* vec2, float epsilon);
+
 	// Static Methods
+	/**
+	* @brief Returns the angle between two Vector3
+	* 
+	* @param vec1: The first vector
+	* @param vec2: The second vector
+	* 
+	* @return The angle between the two vectors, in 
+	*/
 	static float GetAngle(Vector3 vec1, Vector3 vec2);
 	static float GetAngle(float* vec1, float* vec2);
 	static float GetDistance(Vector3 vec1, Vector3 vec2);
