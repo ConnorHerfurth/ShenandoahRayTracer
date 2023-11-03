@@ -102,6 +102,8 @@ public:
 	* @brief Checks if two Vector3 have all equivalent components.
 	* 
 	* @param vec: A Vector3 to check equivalence.
+	* @param epsilon: A floating point epsilon, which avoids incorrect 'false'
+	* returns.
 	* 
 	* @return Whether the two Vector3 are equivalent.
 	*/
@@ -127,6 +129,16 @@ public:
 	Vector3 operator*(float f);
 	Vector3 operator/(float f);
 
+	/**
+	* @brief Returns whether two vector arrays are equal, within an epsilon.
+	* 
+	* @param vec1: A pointer to a float array with minimum size 3.
+	* @param vec2: A pointer to a float array with minimum size 3.
+	* @param epsilon: A floating point epsilon, which avoids incorrect 'false'
+	* returns.
+	* 
+	* @return Whether the two vectors were equal
+	*/
 	static bool Equals(float* vec1, float* vec2, float epsilon);
 
 	// Static Methods
@@ -136,29 +148,200 @@ public:
 	* @param vec1: The first vector
 	* @param vec2: The second vector
 	* 
-	* @return The angle between the two vectors, in 
+	* @return The angle between the two Vector3, in radians
 	*/
 	static float GetAngle(Vector3 vec1, Vector3 vec2);
+	/**
+	* @brief Returns the angle between two Vector3 arrays
+	* 
+	* @param vec1: A pointer to a float array with minimum size 3.
+	* @param vec2: A pointer to a float array with minimum size 3.
+	* 
+	* @returns The angle between the two vectors, in radians.
+	*/
 	static float GetAngle(float* vec1, float* vec2);
+	/**
+	* @brief Returns the distance between two Vector3
+	* 
+	* @param vec1: The first vector
+	* @param vec2: The second vector
+	* 
+	* @return The distance between the two Vector3.  Unit is dependent on the
+	* unit of the vectors.
+	*/
 	static float GetDistance(Vector3 vec1, Vector3 vec2);
+	/**
+	* @brief Returns the distance between two vector arrays.
+	* 
+	* @param vec1: A pointer to a float array with minimum size 3.
+	* @param vec2: A pointer to a float array with minimum size 3.
+	* 
+	* @return The distance between the two vectors.  Unit is dependent on the
+	* unit of the vectors.
+	*/
 	static float GetDistance(float* vec1, float* vec2);
+	/**
+	* @brief Returns the dot product of two Vector3
+	* 
+	* @param vec1: The first vector.
+	* @param vec2: The second vector.
+	* 
+	* @returns The dot product of both Vector3.
+	*/
 	static float Dot(Vector3 vec1, Vector3 vec2);
+	/**
+	* @brief Returns the dot product of two vector arrays.
+	* 
+	* @param vec1: A pointer to a float array with minimum size 3.
+	* @param vec2: A pointer to a float array with minimum size 3.
+	* 
+	* @return The dot product of both vectors.
+	*/
 	static float Dot(float* vec1, float* vec2);
+	/**
+	* @brief Returns the magnitude of a vector array.
+	* 
+	* @param vec: A pointer to a float array with minimum size 3.
+	* 
+	* @return The magnitude of the vector.
+	*/
 	static float GetMagnitude(float* vec);
 
+	/**
+	* @brief Returns the cross product of two Vector3.
+	* 
+	* @param vec1: The first vector.
+	* @param vec2: The second vector.
+	* 
+	* @return The cross product of the two vectors.
+	*/
 	static Vector3 Cross(Vector3 vec1, Vector3 vec2);
+	/**
+	* @brief Calculates and stores the cross product of two vector arrays.
+	* Cannot be done in-place.
+	* 
+	* @param vec1: A pointer to a float array with minimum size 3.
+	* @param vec2: A pointer to a float array with minimum size 3.
+	* @param output_location: A pointer to a float array with minimum size 3,
+	* where the output data can be written.
+	* 
+	* @return None, but stores result in 'output_location'.
+	*/
 	static void Cross(float* vec1, float* vec2, float* output_location);
+	/**
+	* @brief Returns a normalized version of a Vector3, or version of Vector3
+	* that has a magnitude of 1.
+	* 
+	* @param vec: The vector to be normalized.
+	* 
+	* @return A new Vector3 that is a normalized version of 'vec'
+	*/
 	static Vector3 Normalize(Vector3 vec);
+	/**
+	* @brief Calculates and stores the normalized version of a vector array.
+	* Can be done in-place.
+	* 
+	* @param vec1: A pointer to a float array with minimum size 3.
+	* @param vec2: A pointer to a float array with minimum size 3.
+	* @param output_location: A pointer to a float array with minimum size 3
+	* where the output data can be written.
+	* 
+	* @return None, but stores result in 'output_location'
+	*/
 	static void Normalize(float* vec1, float* output_location);
-	static Vector3 Project(Vector3 vec1, Vector3 vec2);
-	static void Project(float* vec1, float* vec2, float* output_location);
+	/**
+	* @brief Returns the projection vector, proju(v), or the projection of u
+	* onto v.
+	* 
+	* @param u: The u vector of the projection
+	* @param v: The v vector of the projection
+	* 
+	* @returns A new Vector3 that is the projection of u onto v.
+	*/
+	static Vector3 Project(Vector3 u, Vector3 v);
+	/**
+	* @brief Calculates and stores the projection vector, proju(v), or the 
+	* projection of u onto v, using float arrays.  Cannot be done in-place.
+	* 
+	* @param u: A pointer to a float array with minimum size 3.
+	* @param v: A pointer to a float array with minimum size 3.
+	* @param output_location: A pointer to a float array with minimum size 3,
+	* where the output data can be written
+	* 
+	* @return None, but stores result in 'output_location'
+	*/
+	static void Project(float* u, float* v, float* output_location);
 
 	// Static Operator Equivalents for use in Arrays
+	/**
+	* @brief Adds two vector arrays.  Can be done in-place.
+	* 
+	* @param vec1: A pointer to a float array with minimum size 3.
+	* @param vec2: A pointer to a float array with minimum size 3.
+	* @param output_location: A pointer to a float array with minimum size 3,
+	* where the output data can be written.
+	* 
+	* @return None, but stores result in 'output_location'
+	*/
 	static void Add(float* vec1, float* vec2, float* output_location);
+	/**
+	* @brief Adds a float to a vector array component-wise.  Can be done 
+	* in-place.
+	* 
+	* @param vec1: A pointer to a float array with minimum size 3.
+	* @param f: The value to be added.
+	* @param output_location: A pointer to a float array with minimum size 3,
+	* where the output data can be written.
+	* 
+	* @return None, but stores result in 'output_location'
+	*/
 	static void AddF(float* vec1, float f, float* output_location);
+	/**
+	* @brief Subtracts two vector arrays.  Can be done in-place.
+	* 
+	* @param vec1: A pointer to a float array with minimum size 3.
+	* @param vec2: A pointer to a float array with minimum size 3.
+	* @param output_location: A pointer to a float array with minimum size 3,
+	* where the output data can be written.
+	* 
+	* @return None, but stores result in 'output_location'
+	*/
 	static void Subtract(float* vec1, float* vec2, float* output_location);
+	/**
+	* @brief Subtracts a float from a vector array component-wise.  Can be done
+	* in-place.
+	* 
+	* @param vec1: A pointer to a float array with minimum size 3.
+	* @param f: The value to be subtracted.
+	* @param output_location: A pointer to a float array with minimum size 3,
+	* where the output data can be written.
+	* 
+	* @return None, but stores result in 'output_location'
+	*/
 	static void SubtractF(float* vec1, float f, float* output_location);
+	/**
+	* @brief Multiplies a float to a vector array component-wise.  Can be done
+	* in place.
+	* 
+	* @param vec1: A pointer to a float array with minimum size 3.
+	* @param f: The value to be multiplied.
+	* @param output_location: A pointer to a float array with minimum size 3,
+	* where the output data can be written.
+	* 
+	* @return None, but stores result in 'output_location'
+	*/
 	static void MultiplyF(float* vec1, float f, float* output_location);
+	/**
+	* @brief Divides a float from a vector array component-wise.  Can be done
+	* in place.
+	* 
+	* @param vec1: A pointer to a float array with minimum size 3.
+	* @param f: The value to be divided by.
+	* @param output_location: A pointer to a float array with minimum size 3,
+	* where the output data can be written.
+	* 
+	* @return None, but stores result in 'output_location'
+	*/
 	static void DivideF(float* vec1, float f, float* output_location);
 
 };

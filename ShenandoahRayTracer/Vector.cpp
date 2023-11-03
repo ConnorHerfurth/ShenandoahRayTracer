@@ -175,7 +175,7 @@ void Vector2::DivideF(float* vec1, float f, float* output_location)
 	output_location[1] = vec1[1] / f;
 }
 
-// Vector3 Impelementation
+// Vector3 Implementation
 Vector3::Vector3()
 {
 	x = 0;
@@ -190,7 +190,6 @@ Vector3::Vector3(float _x, float _y, float _z)
 	z = _z;
 }
 
-// Initializes a Vector3 from a float array
 Vector3::Vector3(float* vector_location)
 {
 	x = vector_location[0];
@@ -198,7 +197,6 @@ Vector3::Vector3(float* vector_location)
 	z = vector_location[2];
 }
 
-// Creates a deep copy so that scope can be maintained.
 Vector3 Vector3::Copy()
 {
 	return Vector3(x, y, z);
@@ -332,25 +330,19 @@ void Vector3::Normalize(float* vec1, float* output_location)
 	output_location[2] = vec1[2] / m;
 }
 
-// Calculates and returns the projection vector, in the format
-// proju(v), where u = vec1 and v = vec2.
-Vector3 Vector3::Project(Vector3 vec1, Vector3 vec2)
+Vector3 Vector3::Project(Vector3 u, Vector3 v)
 {
-	return vec1 * (Dot(vec1, vec2) / pow(vec1.GetMagnitude(), 2));
+	return u * (Dot(u, v) / pow(u.GetMagnitude(), 2));
 }
 
-// Same as previous method, but in-place.
-void Vector3::Project(float* vec1, float* vec2, float* output_location)
+void Vector3::Project(float* u, float* v, float* output_location)
 {
-	float d = Dot(vec1, vec2);
-	float p = pow(GetMagnitude(vec1), 2);
+	float d = Dot(u, v);
+	float p = pow(GetMagnitude(u), 2);
 
-	MultiplyF(vec1, d / p, output_location);
+	MultiplyF(u, d / p, output_location);
 }
 
-// These operator equivalents allow for you to do the same operators as before
-// but in place, so it can be done over large array sets.  All of these are safe
-// for saving to the same pointers that are provided for data.
 void Vector3::Add(float* vec1, float* vec2, float* output_location)
 {
 	output_location[0] = vec1[0] + vec2[0];
