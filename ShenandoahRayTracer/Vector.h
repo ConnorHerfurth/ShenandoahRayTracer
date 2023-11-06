@@ -4,22 +4,69 @@
 #include <format>
 #include <math.h>
 
-/// <summary>
-/// 2D mathematical vector, mostly used for UV texture coordinates.
-/// </summary>
+/** Implementation of a 2D Mathematical Vector
+
+The Vector2 class is used to both encapsulate 2D vector information and
+operations easily, as well as providing methods for performing vector math
+on arrays of floats.
+
+*/
 class Vector2 {
 public:
 	float x, y;
 
+	/**
+	* @brief Default constructor for Vector2.
+	*/
 	Vector2();
+	/**
+	* @brief Vector2 constructor with specified values.
+	* 
+	* @param _x: The x component of the vector.
+	* @param _y: The y component of the vector.
+	*/
 	Vector2(float _x, float _y);
+	/**
+	* @brief Vector2 constructor that loads from pointer to float array.
+	* 
+	* @param vector_location: A pointer to a float array with minimum size 2.
+	*/
 	Vector2(float* vector_location);
 
 	// Non-Static Methods
+	/**
+	* @brief Returns a deep copy of the Vector2.
+	* 
+	* @return A deep copy of the vector.
+	*/
 	Vector2 Copy();
+	/**
+	* @brief Copies the Vector2 to a float array.
+	* 
+	* @param output_location: A pointer to a float array with minimum size 2.
+	*/
 	void Copy(float* output_location);
-	bool Equals(Vector2 vec);
+	/**
+	* @brief Checks if two Vector2 have all equivalent components, within an
+	* epsilon.
+	* 
+	* @param vec: A Vector2 to check equivalence.
+	* @param epsilon: A floating point epsilon.
+	* 
+	* @return True if they're equal, false otherwise.
+	*/
+	bool Equals(Vector2 vec, float epsilon);
+	/**
+	* @brief Returns the magnitude of the vector.
+	* 
+	* @return The magnitude of the vector.
+	*/
 	float GetMagnitude();
+	/**
+	* @brief Returns a string representation of the vector.
+	* 
+	* @returns A string representation of the vector.
+	*/
 	std::string ToString();
 
 	// Operators
@@ -31,25 +78,181 @@ public:
 	Vector2 operator/(float f);
 
 	// Static Methods
+	/**
+	* @brief Returns the angle between two Vector2.
+	* 
+	* @param vec1: The first vector.
+	* @param vec2: The second vector.
+	* 
+	* @return The angle between the vectors, in radians.
+	*/
 	static float GetAngle(Vector2 vec1, Vector2 vec2);
+	/**
+	* @brief Returns the angle between two vector arrays.
+	* 
+	* @param vec1: Pointer to a float array with minimum size 2.
+	* @param vec2: Pointer to a float array with minimum size 2.
+	* 
+	* @return The angle between the vectors, in radians.
+	*/
 	static float GetAngle(float* vec1, float* vec2);
-	static float GetDistance(Vector2 vecc1, Vector2 vec2);
+	/**
+	* @brief Returns the distance between two Vector2, treating them as points.
+	* 
+	* @param vec1: The first vector.
+	* @param vec2: The second vector.
+	* 
+	* @return The distance between the vectors, in units.
+	*/
+	static float GetDistance(Vector2 vec1, Vector2 vec2);
+	/**
+	* @brief Returns the distance between two vector arrays, treating them as
+	* points.
+	* 
+	* @param vec1: Pointer to a float array with minimum size 2.
+	* @param vec2: Pointer to a float array with minimum size 2.
+	* 
+	* @return The distance between the vectors, in units.
+	*/
 	static float GetDistance(float* vec1, float* vec2);
+	/**
+	* @brief Returns the dot product of the two Vector2.
+	* 
+	* @param vec1: The first vector.
+	* @param vec2: The second vector.
+	* 
+	* @return The dot product of the vectors.
+	*/
 	static float Dot(Vector2 vec1, Vector2 vec2);
+	/**
+	* @brief Returns the dot product of two vector arrays.
+	* 
+	* @param vec1: Pointer to a float array with minimum size 2.
+	* @param vec2: Pointer to a float array with minimum size 2.
+	* 
+	* @return The dot product of the vectors.
+	*/
 	static float Dot(float* vec1, float* vec2);
+	/**
+	* @brief Returns the magnitude of a vector array.
+	* 
+	* @param vec: Pointer to a float array with minimum size 2.
+	* 
+	* @return The magnitude of the vector.
+	*/
 	static float GetMagnitude(float* vec);
 
+	/**
+	* @brief Returns a normalized version of the vector, or a vector where the
+	* magnitude is 1.
+	* 
+	* @param vec: The vector to be normalized.
+	* 
+	* @return The normalized vector.
+	*/
 	static Vector2 Normalize(Vector2 vec);
+	/**
+	* @brief Calculates and stores a normalized version of the vector, or a
+	* vector where the magnitude is 1.  Can be done in-place.
+	* 
+	* @param vec: Pointer to a float array with minimum size 2.
+	* @param output_location: Pointer to a float array with minimum size 2,
+	* where the output data can be written.
+	* 
+	* @return None, but stores result in 'output_location'.
+	*/
 	static void Normalize(float* vec, float* output_location);
+	/**
+	* @brief Returns the projection vector, proju(v), or the 
+	* projection of u onto v.
+	* 
+	* @param vec1: The first vector.
+	* @param vec2: The second vector.
+	* 
+	* @return The projection vector proju(v).
+	*/
 	static Vector2 Project(Vector2 vec1, Vector2 vec2);
+	/**
+	* @brief Calculates and stores the projection vector, proju(v), or the
+	* projection of u onto v, using float arrays.  Cannot be done in-place.
+	* 
+	* @param vec1: Pointer to a float array with minimum size 2.
+	* @param vec2: Pointer to a float array with minimum size 2.
+	* @param output_location: Pointer to a float array with minimum size 2,
+	* where output data can be written.
+	* 
+	* @return None, but stores the result in 'output_location'.
+	*/
 	static void Project(float* vec1, float* vec2, float* output_location);
 
 	// Static Operator Equivalents for use in Arrays
+	/**
+	* @brief Adds two vector arrays.  Can be done in place.
+	* 
+	* @param vec1: Pointer to a float array with minimum size 2.
+	* @param vec2: Pointer to a float array with minimum size 2.
+	* @param output_location: Pointer to a float array with minimum size 2,
+	* where output data can be written.
+	* 
+	* @return None, but stores result in 'output_location'.
+	*/
 	static void Add(float* vec1, float* vec2, float* output_location);
+	/**
+	* @brief Adds a vector array and a float.  Can be done in-place.
+	* 
+	* @param vec1: Pointer to a float array with minimum size 2.
+	* @param f: Float to be added.
+	* @param output_location: Pointer to a float array with minimum size 2,
+	* where output data can be written.
+	* 
+	* @return None, but stores result in 'output_location'.
+	*/
 	static void AddF(float* vec1, float f, float* output_location);
+	/**
+	* @brief Subtracts two vector arrays, like (vec1 - vec2).  Can be done 
+	* in-place.
+	* 
+	* @param vec1: Pointer to a float array with minimum size 2.
+	* @param vec2: Pointer to a float array with minimum size 2.
+	* @param output_location: Pointer to a float array with minimum size 2,
+	* where output data can be written.
+	* 
+	* @return None, but stores result in 'output_location'.
+	*/
 	static void Subtract(float* vec1, float* vec2, float* output_location);
+	/**
+	* @brief Subtracts a vector array and a float, like (vec1 - f).  Can be 
+	* done in-place.
+	* 
+	* @param vec1: Pointer to a float array with minimum size 2.
+	* @param f: Float to be subtracted.
+	* @param output_location: Pointer to a float array with minimum size 2,
+	* where output data can be written.
+	* 
+	* @return None, but stores result in 'output_location'.
+	*/
 	static void SubtractF(float* vec1, float f, float* output_location);
+	/**
+	* @brief Multiplies a vector array and a float.  Can be done in-place.
+	* 
+	* @param vec1: Pointer to a float array with minimum size 2.
+	* @param f: Float to be multiplied.
+	* @param output_location: Pointer to a float array with minimum size 2,
+	* where output data can be written.
+	* 
+	* @return None, but stores result in 'output_location'.
+	*/
 	static void MultiplyF(float* vec1, float f, float* output_location);
+	/**
+	* @brief Divides a vector array by a float.  Can be done in-place.
+	* 
+	* @param vec1: Pointer to a float array with minimum size 2.
+	* @param f: Float to divide by.
+	* @param output_location: Pointer to a float array with minimum size 2,
+	* where output data can be written.
+	* 
+	* @return None, but stores result in 'output_location'.
+	*/
 	static void DivideF(float* vec1, float f, float* output_location);
 };
 

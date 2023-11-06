@@ -31,9 +31,10 @@ void Vector2::Copy(float* output_location)
 	output_location[1] = y;
 }
 
-bool Vector2::Equals(Vector2 vec)
+bool Vector2::Equals(Vector2 vec, float epsilon)
 {
-	return x == vec.x && y == vec.y;
+	return abs(x - vec.x) < epsilon &&
+		   abs(y - vec.y) < epsilon;
 }
 
 float Vector2::GetMagnitude()
