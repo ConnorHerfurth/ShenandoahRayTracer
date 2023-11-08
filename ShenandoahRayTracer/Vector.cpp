@@ -79,7 +79,7 @@ Vector2 Vector2::operator/(float f)
 
 float Vector2::GetAngle(Vector2 vec1, Vector2 vec2)
 {
-	return acos(Dot(vec1, vec2) / sqrt(vec1.GetMagnitude() * vec2.GetMagnitude()));
+	return acos(Dot(vec1, vec2) / (vec1.GetMagnitude() * vec2.GetMagnitude()));
 }
 
 float Vector2::GetAngle(float* vec1, float* vec2)
@@ -121,9 +121,8 @@ void Vector2::Normalize(float* vec, float* output_location)
 {
 	float magnitude = GetMagnitude(vec);
 
-	output_location[0] = output_location[0] / magnitude;
+	output_location[0] = vec[0] / magnitude;
 	output_location[1] = output_location[1] / magnitude;
-	output_location[2] = output_location[2] / magnitude;
 }
 
 Vector2 Vector2::Project(Vector2 vec1, Vector2 vec2)
